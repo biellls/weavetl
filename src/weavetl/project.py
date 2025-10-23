@@ -11,7 +11,6 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_valida
 from .connections.config import ConnectionsProjectConfig
 
 PROJECT_FILENAME = "weavetl_project.yaml"
-LEGACY_PROJECT_FILENAMES = ("weavetl_project.yml",)
 
 
 class WeavetlProject(BaseModel):
@@ -68,11 +67,6 @@ def find_project_file(directory: Optional[Path] = None) -> Optional[Path]:
     if candidate.exists():
         return candidate
 
-    base_dir = directory or Path.cwd()
-    for legacy_name in LEGACY_PROJECT_FILENAMES:
-        legacy_candidate = base_dir / legacy_name
-        if legacy_candidate.exists():
-            return legacy_candidate
     return None
 
 
