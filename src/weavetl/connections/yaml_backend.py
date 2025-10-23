@@ -7,7 +7,7 @@ from typing import MutableMapping, Optional
 
 import yaml
 
-from .models import Connection, parse_connection
+from .models import Connection, parse_connections_document
 from .resolution import ConnectionBackend
 
 
@@ -27,22 +27,8 @@ class YAMLConnectionBackend(ConnectionBackend):
         if not isinstance(raw, MutableMapping):
             raise ValueError(f"Invalid YAML format in {self._path}")
 
-        connections_data = raw.get("connections", [])
-        if not isinstance(connections_data, list):
-            raise ValueError(
-                f"Expected 'connections' list in {self._path}, got {type(connections_data)!r}"
-            )
-
-        parsed: dict[str, Connection] = {}
-        for entry in connections_data:
-            if not isinstance(entry, MutableMapping):
-                raise ValueError(
-                    f"Invalid connection entry in {self._path}: {entry!r}"
-                )
-            connection = parse_connection(entry)
-            parsed[connection.id] = connection
-
-        return parsed
+        document = parse_connections_document(raw)
+        return {connection.id: connection for connection in document.connections}
 
     def get_connection(self, connection_id: str) -> Optional[Connection]:
         return self._load().get(connection_id)

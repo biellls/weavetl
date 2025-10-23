@@ -169,10 +169,29 @@ def parse_connection(data: Dict[str, object]) -> Connection:
         raise ValueError(msg) from exc
 
 
+class ConnectionsDocument(BaseModel):
+    """Top-level YAML document that contains connection definitions."""
+
+    connections: List[Connection] = Field(default_factory=list)
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
+def parse_connections_document(data: Dict[str, object]) -> "ConnectionsDocument":
+    """Parse a YAML connections document."""
+
+    try:
+        return ConnectionsDocument.model_validate(data)
+    except ValidationError as exc:
+        msg = "Invalid connections document"
+        raise ValueError(msg) from exc
+
+
 __all__ = [
     "AuthConfig",
     "BasicAuth",
     "Connection",
+    "ConnectionsDocument",
     "ConnectionOptions",
     "Endpoint",
     "OAuth2Auth",
@@ -180,4 +199,5 @@ __all__ = [
     "TokenAuth",
     "TokenPlacement",
     "parse_connection",
+    "parse_connections_document",
 ]
