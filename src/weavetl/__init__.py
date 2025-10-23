@@ -9,6 +9,20 @@ from .project import (
     project_file_path,
 )
 
+from .connections import (  # noqa: F401  (re-exported symbols)
+    AirflowConnectionBackend,
+    BasicAuth,
+    Connection,
+    ConnectionBackend,
+    ConnectionResolver,
+    Endpoint,
+    OAuth2Auth,
+    OAuth2Flow,
+    TokenAuth,
+    TokenPlacement,
+    YAMLConnectionBackend,
+)
+
 __all__ = [
     "PROJECT_FILENAME",
     "WeavetlProject",
@@ -16,4 +30,15 @@ __all__ = [
     "init_project",
     "load_project",
     "project_file_path",
+    "AirflowConnectionBackend",
+    "BasicAuth",
+    "Connection",
+    "ConnectionBackend",
+    "ConnectionResolver",
+    "Endpoint",
+    "OAuth2Auth",
+    "OAuth2Flow",
+    "TokenAuth",
+    "TokenPlacement",
+    "YAMLConnectionBackend",
 ]
