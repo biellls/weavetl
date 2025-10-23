@@ -139,13 +139,38 @@ def connections(
         typer.echo("No connections are currently available from the configured backends.")
     else:
         typer.echo("Connections (higher-precedence backends listed first):")
-        for connection_id, (connection, origin) in resolved.items():
-            typer.echo(f"- {connection.id} [{connection.type}] (source: {origin})")
-            if connection.endpoint is not None:
-                typer.echo(f"    endpoint: {connection.endpoint.baseUrl}")
+
+        headers = ("ID", "Type", "Endpoint", "Auth", "Source")
+        table_rows: list[tuple[str, str, str, str, str]] = []
+        for connection, origin in resolved.values():
+            endpoint = connection.endpoint.baseUrl if connection.endpoint else "-"
+            auth_kind = "-"
             if connection.auth is not None:
                 auth_kind = getattr(connection.auth, "kind", connection.auth.__class__.__name__)
-                typer.echo(f"    auth: {auth_kind}")
+            table_rows.append(
+                (
+                    connection.id,
+                    connection.type,
+                    endpoint,
+                    auth_kind,
+                    origin,
+                )
+            )
+
+        column_widths = [len(header) for header in headers]
+        for row in table_rows:
+            for index, cell in enumerate(row):
+                column_widths[index] = max(column_widths[index], len(cell))
+
+        def format_row(row: tuple[str, ...]) -> str:
+            return " | ".join(cell.ljust(column_widths[idx]) for idx, cell in enumerate(row))
+
+        header_line = format_row(headers)
+        separator_line = "-+-".join("-" * width for width in column_widths)
+        typer.echo(header_line)
+        typer.echo(separator_line)
+        for row in table_rows:
+            typer.echo(format_row(row))
 
     if shadowed:
         typer.echo()
