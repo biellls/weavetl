@@ -137,5 +137,9 @@ class AirflowConnectionBackend(ConnectionBackend):
 
         return self._from_airflow(airflow_conn)
 
+    def iter_connections(self):  # pragma: no cover - requires Airflow environment
+        msg = "Listing all Airflow connections is not supported by this backend"
+        raise NotImplementedError(msg)
+
 
 __all__ = ["AirflowConnectionBackend"]

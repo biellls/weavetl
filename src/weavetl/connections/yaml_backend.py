@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import MutableMapping, Optional
+from typing import Iterable, MutableMapping, Optional
 
 import yaml
 
@@ -32,6 +32,9 @@ class YAMLConnectionBackend(ConnectionBackend):
 
     def get_connection(self, connection_id: str) -> Optional[Connection]:
         return self._load().get(connection_id)
+
+    def iter_connections(self) -> Iterable[Connection]:
+        return tuple(self._load().values())
 
 
 __all__ = ["YAMLConnectionBackend"]

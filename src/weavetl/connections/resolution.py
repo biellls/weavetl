@@ -15,6 +15,16 @@ class ConnectionBackend(ABC):
     def get_connection(self, connection_id: str) -> Optional[Connection]:
         """Return a connection for ``connection_id`` if present."""
 
+    def iter_connections(self) -> Iterable[Connection]:
+        """Iterate over all connections known to the backend.
+
+        Backends may override this method to support bulk inspection. The default
+        implementation raises :class:`NotImplementedError` to signal that the
+        backend does not support enumeration.
+        """
+
+        raise NotImplementedError
+
 
 class ConnectionResolver:
     """Resolve connections from multiple backends based on precedence."""

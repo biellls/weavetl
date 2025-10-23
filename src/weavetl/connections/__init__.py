@@ -1,5 +1,12 @@
 """Connection models and backends for WeaveTL."""
 
+from .config import (
+    ConfiguredBackend,
+    ConnectionBackendConfig,
+    ConnectionsProjectConfig,
+    build_resolver,
+    configure_backends,
+)
 from .models import (
     BasicAuth,
     Connection,
@@ -17,7 +24,10 @@ __all__ = [
     "BasicAuth",
     "Connection",
     "ConnectionBackend",
+    "ConnectionBackendConfig",
     "ConnectionResolver",
+    "ConnectionsProjectConfig",
+    "ConfiguredBackend",
     "Endpoint",
     "OAuth2Auth",
     "OAuth2Flow",
@@ -25,4 +35,6 @@ __all__ = [
     "TokenPlacement",
     "YAMLConnectionBackend",
     "AirflowConnectionBackend",
+    "build_resolver",
+    "configure_backends",
 ]
