@@ -72,7 +72,8 @@ def info(
         raise typer.Exit(code=1) from exc
 
     typer.echo(f"Project name: {project.name}")
-    typer.echo(f"Project file: {project.path}")
+    typer.echo(f"Project directory: {project.path}")
+    typer.echo(f"Project file: {project.path / PROJECT_FILENAME}")
 
 
 def main() -> None:

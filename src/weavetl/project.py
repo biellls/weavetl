@@ -18,6 +18,7 @@ class WeavetlProject(BaseModel):
 
     name: str = Field(..., min_length=1)
     path: Path
+    """Directory containing the ``weavetl_project.yml`` file."""
 
     @field_validator("name")
     @classmethod
@@ -127,7 +128,8 @@ def load_project(directory: Optional[Path] = None) -> WeavetlProject:
     if not isinstance(data, dict):
         raise ValueError(f"Invalid project configuration format in {project_path}")
 
-    data_with_path = {**data, "path": project_path}
+    project_dir = project_path.parent
+    data_with_path = {**data, "path": project_dir}
 
     try:
         return WeavetlProject.model_validate(data_with_path)
