@@ -143,7 +143,11 @@ def connections(
         headers = ("ID", "Type", "Endpoint", "Auth", "Source")
         table_rows: list[tuple[str, str, str, str, str]] = []
         for connection, origin in resolved.values():
-            endpoint = connection.endpoint.baseUrl if connection.endpoint else "-"
+            endpoint = (
+                str(connection.endpoint.baseUrl)
+                if connection.endpoint and connection.endpoint.baseUrl
+                else "-"
+            )
             auth_kind = "-"
             if connection.auth is not None:
                 auth_kind = getattr(connection.auth, "kind", connection.auth.__class__.__name__)
