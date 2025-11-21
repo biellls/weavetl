@@ -8,7 +8,9 @@ from typing import Any, Optional
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
-PROJECT_FILENAME = "weavetl_project.yml"
+from .connections.config import ConnectionsProjectConfig
+
+PROJECT_FILENAME = "weavetl_project.yaml"
 
 
 class WeavetlProject(BaseModel):
@@ -18,7 +20,10 @@ class WeavetlProject(BaseModel):
 
     name: str = Field(..., min_length=1)
     path: Path
-    """Directory containing the ``weavetl_project.yml`` file."""
+    """Directory containing the project configuration file."""
+    connections: ConnectionsProjectConfig = Field(
+        default_factory=ConnectionsProjectConfig
+    )
 
     @field_validator("name")
     @classmethod
@@ -59,7 +64,10 @@ def find_project_file(directory: Optional[Path] = None) -> Optional[Path]:
     """
 
     candidate = project_file_path(directory)
-    return candidate if candidate.exists() else None
+    if candidate.exists():
+        return candidate
+
+    return None
 
 
 def init_project(directory: Optional[Path] = None, *, name: str, overwrite: bool = False) -> Path:
@@ -87,7 +95,10 @@ def init_project(directory: Optional[Path] = None, *, name: str, overwrite: bool
         msg = f"A WeaveTL project already exists at {target}"
         raise FileExistsError(msg)
 
-    data = {"name": name}
+    data = {
+        "name": name,
+        "connections": {"backends": []},
+    }
     with target.open("w", encoding="utf-8") as fh:
         yaml.safe_dump(data, fh, sort_keys=False)
 

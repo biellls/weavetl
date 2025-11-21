@@ -15,3 +15,36 @@
     
 
 weavETL is not a warehouse or an orchestrator; it’s the connective tissue that makes “query anything” feel native, repeatable, and auditable.
+
+## Local setup
+
+Projects are configured via a `weavetl_project.yaml` file at the root of your repository. A minimal configuration that enables the YAML connections backend looks like this:
+
+```yaml
+name: Example Project
+connections:
+  backends:
+    - type: yaml
+      path: connections/local.yaml
+```
+
+The referenced YAML file defines the actual connections. Here is a sample `connections/local.yaml` you can adapt:
+
+```yaml
+connections:
+  - id: http.myapi
+    type: http
+    endpoint:
+      baseUrl: https://api.example.com
+    auth:
+      kind: token
+      token: my-api-token-value
+      placement: header
+      name: Authorization
+      prefix: Bearer
+    options:
+      timeoutSeconds: 20
+      retries: 5
+```
+
+Check these files into your project root (but keep the connections YAML out of version control if it contains secrets) and then use the `weavetl connections` CLI command to inspect what has been configured.
